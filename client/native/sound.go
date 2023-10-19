@@ -33,9 +33,7 @@ func (s *Sound) Data(key *ari.Key) (*ari.SoundData, error) {
 // valid filters are "lang", "format", and nil (no filter)
 // An empty filter returns all available sounds
 func (s *Sound) List(filters map[string]string, keyFilter *ari.Key) (sh []*ari.Key, err error) {
-	sounds := []struct {
-		Name string `json:"name"`
-	}{}
+	var sounds []ari.SoundData
 
 	uri := "/sounds"
 
@@ -60,7 +58,7 @@ func (s *Sound) List(filters map[string]string, keyFilter *ari.Key) (sh []*ari.K
 
 	// Store whatever we received, even if incomplete or error
 	for _, i := range sounds {
-		k := s.client.stamp(ari.NewKey(ari.SoundKey, i.Name))
+		k := s.client.stamp(ari.NewKey(ari.SoundKey, i.ID))
 		if keyFilter.Match(k) {
 			sh = append(sh, k)
 		}
