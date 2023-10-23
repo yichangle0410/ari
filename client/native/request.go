@@ -127,6 +127,10 @@ func (c *Client) makeRequest(method, url string, resp interface{}, req interface
 
 	defer ret.Body.Close() //nolint:errcheck
 
+	if err := maybeRequestError(ret); err != nil {
+		return eris.Wrap(err, "failed to response")
+	}
+
 	if resp != nil {
 		err = json.NewDecoder(ret.Body).Decode(resp)
 		if err != nil {
@@ -134,7 +138,7 @@ func (c *Client) makeRequest(method, url string, resp interface{}, req interface
 		}
 	}
 
-	return maybeRequestError(ret)
+	return nil
 }
 
 func structToRequestBody(req interface{}) (io.Reader, error) {
