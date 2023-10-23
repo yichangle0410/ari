@@ -22,4 +22,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/CyCoreSystems/ari/v6 => github.com/yichangle0410/ari/v6
+replace github.com/CyCoreSystems/ari/v6 => ./
