@@ -1,4 +1,4 @@
-module github.com/CyCoreSystems/ari/v6
+module github.com/yichangle0410/ari/v6
 
 go 1.20
 
@@ -21,3 +21,5 @@ require (
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+
+replace github.com/CyCoreSystems/ari/v6 => github.com/yichangle0410/ari/v6
