@@ -330,6 +330,14 @@ func PlaybackStartTimeout(timeout time.Duration) OptionFunc {
 	}
 }
 
+// MaxPlaybackTime overrides the default maximum playback time
+func MaxPlaybackTime(timeout time.Duration) OptionFunc {
+	return func(o *Options) error {
+		o.maxPlaybackTime = timeout
+		return nil
+	}
+}
+
 // DigitTimeouts sets the digit timeouts.  Passing a negative value to any of these indicates that the default value (shown in parentheses below) should be used.
 //
 //   - First digit timeout (4 sec):  The time (after the stop of the audio) to wait for the first digit to be received
