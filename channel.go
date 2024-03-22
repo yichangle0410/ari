@@ -380,6 +380,21 @@ func (ch *ChannelHandle) Hangup() error {
 	return ch.c.Hangup(ch.key, "normal")
 }
 
+// Hangup hangs up the channel with the normal cause code
+func (ch *ChannelHandle) Hangup() error {
+	return ch.c.Hangup(ch.key, "normal")
+}
+
+// Timeout hangs up the channel with the timeout cause code
+func (ch *ChannelHandle) Timeout() error {
+	return ch.c.Hangup(ch.key, "timeout")
+}
+
+// Reject hangs up the channel with the rejected cause code
+func (ch *ChannelHandle) Reject() error {
+	return ch.c.Hangup(ch.key, "rejected")
+}
+
 //--
 
 // --
