@@ -133,6 +133,9 @@ type Channel interface {
 
 	// UserEvent Sends user-event to AMI channel subscribers
 	UserEvent(key *Key, ue *ChannelUserevent) error
+
+	// GetRTPStatistics gets RTP statistics for the channel.
+	GetRTPStatistics(key *Key) (*RTPStatisticsData, error)
 }
 
 // channelDataJSON is the data for a specific channel
@@ -277,6 +280,51 @@ type ExternalMediaOptions struct {
 
 	// Variables defines the set of channel variables which should be bound to this channel upon creation.  This parameter is optional.
 	Variables map[string]string `json:"variables"`
+}
+
+type RTPStatisticsData struct {
+	Txcount              int     `json:"txcount"`               // Total number of RTP packets sent
+	Rxcount              int     `json:"rxcount"`               // Total number of RTP packets received
+	Txploss              int     `json:"txploss"`               // Total number of RTP packets lost while transmitting
+	Rxploss              int     `json:"rxploss"`               // Total number of RTP packets lost while receiving
+	LocalSSRC            int     `json:"local_ssrc"`            // The Synchronization Source identifier for the local participant
+	RemoteSSRC           int     `json:"remote_ssrc"`           // The Synchronization Source identifier for the remote participant
+	Txoctetcount         int     `json:"txoctetcount"`          // Total number of payload octets (bytes) sent in RTP packets
+	Rxoctetcount         int     `json:"rxoctetcount"`          // Total number of payload octets (bytes) received in RTP packets
+	ChannelUniqueID      string  `json:"channel_uniqueid"`      // Unique identifier for the channel
+	Txjitter             float64 `json:"txjitter"`              // Jitter on the transmitting side measured in milliseconds
+	Rxjitter             float64 `json:"rxjitter"`              // Jitter on the receiving side measured in milliseconds
+	RemoteMaxjitter      float64 `json:"remote_maxjitter"`      // Maximum jitter measured on the remote side
+	RemoteMinjitter      float64 `json:"remote_minjitter"`      // Minimum jitter measured on the remote side
+	RemoteNormdevjitter  float64 `json:"remote_normdevjitter"`  // Normalized deviation of jitter on the remote side
+	RemoteStdevjitter    float64 `json:"remote_stdevjitter"`    // Standard deviation of jitter on the remote side
+	LocalMaxjitter       float64 `json:"local_maxjitter"`       // Maximum jitter measured on the local side
+	LocalMinjitter       float64 `json:"local_minjitter"`       // Minimum jitter measured on the local side
+	LocalNormdevjitter   float64 `json:"local_normdevjitter"`   // Normalized deviation of jitter on the local side
+	LocalStdevjitter     float64 `json:"local_stdevjitter"`     // Standard deviation of jitter on the local side
+	RemoteMaxrxploss     float64 `json:"remote_maxrxploss"`     // Maximum packet loss rate on the remote side
+	RemoteMinrxploss     float64 `json:"remote_minrxploss"`     // Minimum packet loss rate on the remote side
+	RemoteNormdevrxploss float64 `json:"remote_normdevrxploss"` // Normalized deviation of packet loss rate on the remote side
+	RemoteStdevrxploss   float64 `json:"remote_stdevrxploss"`   // Standard deviation of packet loss rate on the remote side
+	LocalMaxrxploss      float64 `json:"local_maxrxploss"`      // Maximum packet loss rate on the local side
+	LocalMinrxploss      float64 `json:"local_minrxploss"`      // Minimum packet loss rate on the local side
+	LocalNormdevrxploss  float64 `json:"local_normdevrxploss"`  // Normalized deviation of packet loss rate on the local side
+	LocalStdevrxploss    float64 `json:"local_stdevrxploss"`    // Standard deviation of packet loss rate on the local side
+	Rtt                  float64 `json:"rtt"`                   // Round-trip time measured in milliseconds
+	Maxrtt               float64 `json:"maxrtt"`                // Maximum round-trip time measured
+	Minrtt               float64 `json:"minrtt"`                // Minimum round-trip time measured
+	Normdevrtt           float64 `json:"normdevrtt"`            // Normalized deviation of round-trip time
+	Stdevrtt             float64 `json:"stdevrtt"`              // Standard deviation of round-trip time
+	Txmes                int     `json:"txmes"`                 // Transmission messages count (specific use depends on the context)
+	Rxmes                int     `json:"rxmes"`                 // Reception messages count (specific use depends on the context)
+	RemoteMaxmes         float64 `json:"remote_maxmes"`         // Maximum messages count on the remote side
+	RemoteMinmes         float64 `json:"remote_minmes"`         // Minimum messages count on the remote side
+	RemoteNormdevmes     float64 `json:"remote_normdevmes"`     // Normalized deviation of messages count on the remote side
+	RemoteStdevmes       float64 `json:"remote_stdevmes"`       // Standard deviation of message count on the remote side
+	LocalMaxmes          float64 `json:"local_maxmes"`          // Maximum message count observed on the local side
+	LocalMinmes          float64 `json:"local_minmes"`          // Minimum message count observed on the local side
+	LocalNormdevmes      float64 `json:"local_normdevmes"`      // Normalized deviation of message count on the local side
+	LocalStdevmes        float64 `json:"local_stdevmes"`        // Standard deviation of message count on the local side
 }
 
 // ChannelHandle provides a wrapper on the Channel interface for operations on a particular channel ID.
@@ -603,4 +651,9 @@ func (ch *ChannelHandle) SendDTMF(dtmf string, opts *DTMFOptions) error {
 // UserEvent sends user-event to AMI channel subscribers
 func (ch *ChannelHandle) UserEvent(key *Key, ue *ChannelUserevent) error {
 	return ch.c.UserEvent(ch.key, ue)
+}
+
+// GetRTPStatistics gets RTP statistics for the channel.
+func (ch *ChannelHandle) GetRTPStatistics(key *Key) (*RTPStatisticsData, error) {
+	return ch.c.GetRTPStatistics(ch.key)
 }

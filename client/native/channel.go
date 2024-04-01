@@ -500,3 +500,17 @@ func (c *Channel) UserEvent(key *ari.Key, ue *ari.ChannelUserevent) error {
 
 	return c.client.post(fmt.Sprintf("/events/user/%s", ue.Eventname), nil, &req)
 }
+
+// GetRTPStatistics gets the value of rtp statistics for the channel.
+func (c *Channel) GetRTPStatistics(key *ari.Key) (*ari.RTPStatisticsData, error) {
+	if key == nil || key.ID == "" {
+		return nil, errors.New("channel key not supplied")
+	}
+
+	data := new(ari.RTPStatisticsData)
+	if err := c.client.get("/channels/"+key.ID+"/rtp_statistics", data); err != nil {
+		return nil, fmt.Errorf("Error getting rtp statistics data for channel '%v': %v", key.ID, err.Error())
+	}
+
+	return data, nil
+}
